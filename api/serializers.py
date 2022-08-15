@@ -16,6 +16,6 @@ class VerProdutoSerializer(ModelSerializer):
     class Meta:
         model = Produto
         fields =[
-            'nome','codigo_de_barras','preco_de_venda','preco_de_custo',
+            'pk','nome','codigo_de_barras','preco_de_venda','preco_de_custo',
             'unidade_de_venda','data_de_cadastro','ultima_atualizacao'
         ]

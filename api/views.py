@@ -8,7 +8,6 @@ from api.serializers import ProdutoSerializer, VerProdutoSerializer
 @api_view(['POST'])
 def CadastroDeProduto(request):
     serializer = ProdutoSerializer(data=request.data)
-
     if serializer.is_valid():
         serializer.save()
         produto = Produto.objects.get(nome=serializer.validated_data.get('nome'))
@@ -24,3 +23,15 @@ def VerProduto(request, pk):
     instance = Produto.objects.get(pk=pk)
     serializer = VerProdutoSerializer(instance=instance)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def VerTodosOsProdutos(request):
+    queryset = Produto.objects.all()
+    serializer = VerProdutoSerializer(instance=queryset, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def FiltroDeProdutos(request):
+    pass
+    
+    
