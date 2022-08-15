@@ -1,7 +1,7 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from api.models import Produto
 
-class ProdutoSerializer(ModelSerializer):
+class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
         fields = [
@@ -12,7 +12,9 @@ class ProdutoSerializer(ModelSerializer):
             'unidade_de_venda',
         ]
         
-class VerProdutoSerializer(ModelSerializer):
+class VerProdutoSerializer(serializers.ModelSerializer):
+    data_de_cadastro = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
+    ultima_atualizacao = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     class Meta:
         model = Produto
         fields =[
