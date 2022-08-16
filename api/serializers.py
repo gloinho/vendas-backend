@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from api.models import Produto
+from api.models import Estoque, Produto
 
 
-class ProdutoSerializer(serializers.ModelSerializer):
+class CreateProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
         fields = [
@@ -13,7 +13,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
             'unidade_de_venda',
         ]
         
-class VerProdutoSerializer(serializers.ModelSerializer):
+class RetrieveUpdateProdutoSerializer(serializers.ModelSerializer):
     data_de_cadastro = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     ultima_atualizacao = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     class Meta:
@@ -23,3 +23,22 @@ class VerProdutoSerializer(serializers.ModelSerializer):
             'unidade_de_venda','data_de_cadastro','ultima_atualizacao'
         ]
         
+class RetrieveEstoqueSerializer(serializers.ModelSerializer):
+    ultima_entrada = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
+    ultima_saida = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
+    class Meta:
+        model = Estoque
+        fields =[
+            'produto', 'quantidade','ultima_entrada','ultima_saida'
+        ]
+class UpdateEstoqueSerializer(serializers.ModelSerializer):
+    funcao = serializers.ChoiceField(choices=['drenagem','adicao','atualizacao'], write_only=True)
+    class Meta:
+        model = Estoque
+        fields = [
+            'quantidade',
+            'funcao'
+        ]
+    def update(self, instance, validated_data):
+        validated_data.pop('funcao', None)
+        return super().update(instance, validated_data)
