@@ -31,6 +31,7 @@ class RetrieveEstoqueSerializer(serializers.ModelSerializer):
         fields =[
             'produto', 'quantidade','ultima_entrada','ultima_saida'
         ]
+        
 class UpdateEstoqueSerializer(serializers.ModelSerializer):
     funcao = serializers.ChoiceField(choices=['drenagem','adicao','atualizacao'], write_only=True)
     class Meta:
@@ -40,5 +41,6 @@ class UpdateEstoqueSerializer(serializers.ModelSerializer):
             'funcao'
         ]
     def update(self, instance, validated_data):
+        
         validated_data.pop('funcao', None)
         return super().update(instance, validated_data)
