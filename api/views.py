@@ -1,8 +1,11 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics
+from django_filters import rest_framework as filters
 from api.models import Produto, Estoque
 from api.serializers import ProdutoSerializer, VerProdutoSerializer
+
 
 # Create your views here.
 
@@ -32,12 +35,23 @@ def VerProduto(request, pk):
             serializer.save()
         return Response(status=status.HTTP_200_OK)
             
-@api_view(['GET'])
-def VerTodosOsProdutos(request):
+class ProdutoFilter(filters.FilterSet):
+    class Meta:
+        model = Produto
+        fields = {
+            'codigo_de_barras': ['contains'],
+            'nome': ['contains']
+        }
+        
+class ListTodosOsProdutosAPIView(generics.ListAPIView):
     queryset = Produto.objects.all()
-    serializer = VerProdutoSerializer(instance=queryset, many=True)
-    return Response(serializer.data)
+    serializer_class = VerProdutoSerializer
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = ProdutoFilter
 
+
+
+    
 
 
     

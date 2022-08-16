@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from api.models import Produto
 
+
 class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
@@ -18,6 +19,7 @@ class VerProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
         fields =[
-            'pk','nome','codigo_de_barras','preco_de_venda','preco_de_custo',
+            'id','nome','codigo_de_barras','preco_de_venda','preco_de_custo',
             'unidade_de_venda','data_de_cadastro','ultima_atualizacao'
         ]
+        

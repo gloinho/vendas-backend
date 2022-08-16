@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # INSTALLED APPS
     'corsheaders',
     'rest_framework',
+    'django_filters',
     'api',
     
 ]
