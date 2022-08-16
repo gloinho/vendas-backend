@@ -12,8 +12,8 @@ class Produto(models.Model):
         ('KG', 'Quilograma'),
         ('LT', 'Litro'),
         ('MT', 'Metro Linear'),
-        ('M2', 'Metro Quadrado'),
-        ('M3', 'Metro Cubico'),
+        ('MT2', 'Metro Quadrado'),
+        ('MT3', 'Metro Cubico'),
     )
      
     nome = models.CharField(

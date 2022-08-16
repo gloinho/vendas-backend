@@ -30,10 +30,11 @@ def VerProduto(request, pk):
         return Response(serializer.data)
     if request.method == 'PUT':
         instance = Produto.objects.get(pk=pk)
-        serializer = VerProdutoSerializer(instance=instance, data=request.data)
+        serializer = VerProdutoSerializer(instance=instance, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-        return Response(status=status.HTTP_200_OK)
+            return Response({"success":"Produto atualizado com sucesso"})   
+        return Response(serializer.errors)
             
 class ProdutoFilter(filters.FilterSet):
     class Meta:
