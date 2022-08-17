@@ -1,4 +1,3 @@
-from wsgiref import validate
 from rest_framework import serializers
 from api.models import Estoque, Produto, Historico
 from django.utils import timezone
@@ -14,7 +13,7 @@ class CreateProdutoSerializer(serializers.ModelSerializer):
             'preco_de_custo',
             'unidade_de_venda',
         ]
-        
+     
 class RetrieveUpdateProdutoSerializer(serializers.ModelSerializer):
     data_de_cadastro = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     ultima_atualizacao = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)

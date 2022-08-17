@@ -1,3 +1,4 @@
+from dataclasses import field
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
@@ -43,15 +44,32 @@ class ProdutoFilter(filters.FilterSet):
         model = Produto
         fields = {
             'codigo_de_barras': ['contains'],
-            'nome': ['contains']
+            'nome': ['contains'],
+            'estoque__ultima_entrada':['lt','gt'],
+            'estoque__ultima_saida':['lt','gt']
         }
-        
+
 class ListTodosOsProdutos(generics.ListAPIView):
     queryset = Produto.objects.all()
     serializer_class = RetrieveUpdateProdutoSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = ProdutoFilter
 
+class EstoqueFilter(filters.FilterSet):
+    class Meta:
+        model = Estoque 
+        fields= {
+            'produto__nome':['contains'],
+            'ultima_entrada':['exact'],
+            'ultima_saida':['exact'], 
+        }
+
+class ListTodosOsEstoques(generics.ListAPIView):
+    queryset = Estoque.objects.all()
+    serializer_class = RetrieveEstoqueSerializer
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = EstoqueFilter
+    
 @api_view(['GET','PUT'])
 def RetrieveUpdateEstoque(request, pk):
     if request.method == 'GET':
