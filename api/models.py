@@ -1,5 +1,5 @@
 from decimal import Decimal
-from tabnanny import verbose
+from django.utils import timezone
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -53,9 +53,12 @@ class Historico(models.Model):
         ('Saida','Saída'),
         ('Reajuste','Reajuste'),
     )
-    produto = models.OneToOneField(
+    produto = models.ForeignKey(
         Produto, verbose_name="Histórico", on_delete=models.CASCADE)
     quantidade = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-    data = models.DateTimeField(auto_now_add=True)
+    data = models.DateTimeField(default=timezone.now)
     tipo = models.CharField(max_length=8,choices=TIPO_CHOICES)
+    
+    def __str__(self):
+        return f'{self.produto} tipo {self.tipo}'

@@ -60,18 +60,11 @@ def RetrieveUpdateEstoque(request, pk):
         return Response(serializer.data)
     if request.method == 'PUT':
         instance = Estoque.objects.get(pk=pk)
-        serializer = UpdateEstoqueSerializer(instance=instance, data=request.data, partial=True)
+        serializer = UpdateEstoqueSerializer(instance=instance, data=request.data)
         if serializer.is_valid():
-            print(request.data)
-            data = serializer.validated_data
-            if instance.quantidade > data['quantidade'] and data['funcao'] == 'drenagem' or data['funcao'] == 'atualizacao':
-                data['ultima_saida'] = timezone.now()
-                print(data)
-            elif instance.quantidade < data['quantidade'] and data['funcao'] == 'adicao' or data['funcao'] == 'atualizacao':
-                data['ultima_entrada'] = timezone.now()
-                print(data)
-            serializer.save()
-        return Response(serializer.data)
+            serializer.update(instance=instance, validated_data=serializer.validated_data)
+            return Response(RetrieveEstoqueSerializer(instance=instance).data)
+        return Response(serializer.errors)
     
 
     
