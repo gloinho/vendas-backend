@@ -25,12 +25,13 @@ class RetrieveUpdateProdutoSerializer(serializers.ModelSerializer):
         ]
         
 class RetrieveEstoqueSerializer(serializers.ModelSerializer):
+    nome_do_produto = serializers.CharField(source="produto.nome")
     ultima_entrada = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     ultima_saida = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     class Meta:
         model = Estoque
         fields =[
-            'produto', 'quantidade','ultima_entrada','ultima_saida'
+            'id','nome_do_produto','produto', 'quantidade','ultima_entrada','ultima_saida'
         ]
 
 class HistoricoSerializer(serializers.ModelSerializer):
