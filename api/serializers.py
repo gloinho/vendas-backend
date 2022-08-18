@@ -17,11 +17,14 @@ class CreateProdutoSerializer(serializers.ModelSerializer):
 class RetrieveUpdateProdutoSerializer(serializers.ModelSerializer):
     data_de_cadastro = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     ultima_atualizacao = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
+    ultima_entrada = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True, source="estoque.ultima_entrada")
+    ultima_saida = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True, source="estoque.ultima_saida")
     class Meta:
         model = Produto
         fields =[
             'id','nome','codigo_de_barras','preco_de_venda','preco_de_custo',
-            'unidade_de_venda','data_de_cadastro','ultima_atualizacao'
+            'unidade_de_venda','data_de_cadastro','ultima_atualizacao',            
+            'ultima_entrada','ultima_saida','estoque'
         ]
         
 class RetrieveEstoqueSerializer(serializers.ModelSerializer):
