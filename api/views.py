@@ -16,12 +16,13 @@ from api.serializers import CreateProdutoSerializer, RetrieveUpdateProdutoSerial
 def CreateProduto(request):
     serializer = CreateProdutoSerializer(data=request.data)
     if serializer.is_valid():
+        estoque_inicial = request.data.get('estoque_inicial')
         serializer.save()
-        produto = Produto.objects.get(nome=serializer.validated_data.get('nome'))
-        estoque_inicial = serializer.validated_data.get('estoque_inicial')
-        if estoque_inicial:
+        produto = Produto.objects.last()
+        if estoque_inicial != 0:
             Estoque.objects.create(produto=produto, quantidade = estoque_inicial)
-        Estoque.objects.create(produto=produto, quantidade = 0)
+        else:
+            Estoque.objects.create(produto=produto)
         return Response({"success":"Produto cadastrado com sucesso"})
     return Response(serializer.errors)
 
@@ -59,9 +60,9 @@ class EstoqueFilter(filters.FilterSet):
     class Meta:
         model = Estoque 
         fields= {
+            'produto__codigo_de_barras':['contains'],
             'produto__nome':['contains'],
-            'ultima_entrada':['exact'],
-            'ultima_saida':['exact'], 
+            'quantidade':['exact'],   
         }
 
 class ListTodosOsEstoques(generics.ListAPIView):
