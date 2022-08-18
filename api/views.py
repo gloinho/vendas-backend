@@ -81,7 +81,7 @@ def RetrieveUpdateEstoque(request, pk):
         serializer = UpdateEstoqueSerializer(instance=instance, data=request.data)
         if serializer.is_valid():
             serializer.update(instance=instance, validated_data=serializer.validated_data)
-            return Response(RetrieveEstoqueSerializer(instance=instance).data)
+            return Response([{"Sucesso":"Estoque atualizado com sucesso."}])
         return Response(serializer.errors)
     
 
