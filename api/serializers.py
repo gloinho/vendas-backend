@@ -38,8 +38,18 @@ class RetrieveEstoqueSerializer(serializers.ModelSerializer):
         ]
 
 class HistoricoSerializer(serializers.ModelSerializer):
-    pass
-
+    nome_do_produto = serializers.CharField(source="produto.nome", read_only=True)
+    data = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
+    class Meta:
+        model = Historico
+        fields = [
+            'id',
+            'nome_do_produto',
+            'produto',
+            'tipo',
+            'data',
+            'quantidade'
+        ]
        
 class UpdateEstoqueSerializer(serializers.ModelSerializer):
     
