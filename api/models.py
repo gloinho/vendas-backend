@@ -61,7 +61,7 @@ class Historico(models.Model):
         ('Reajuste','Reajuste'),
     )
     produto = models.ForeignKey(
-        Produto, verbose_name="Histórico", on_delete=models.CASCADE)
+        Produto, verbose_name="Histórico", on_delete=models.CASCADE, related_name='historico')
     quantidade = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     data = models.DateTimeField(default=timezone.now)
