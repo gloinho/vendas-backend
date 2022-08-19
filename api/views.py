@@ -6,8 +6,8 @@ from rest_framework import generics
 from django_filters import rest_framework as filters
 from django.utils import timezone
 
-from api.models import Produto, Estoque
-from api.serializers import CreateProdutoSerializer, RetrieveUpdateProdutoSerializer, RetrieveEstoqueSerializer, UpdateEstoqueSerializer
+from api.models import Historico, Produto, Estoque
+from api.serializers import CreateProdutoSerializer, HistoricoSerializer, RetrieveUpdateProdutoSerializer, RetrieveEstoqueSerializer, UpdateEstoqueSerializer
 
 
 # Create your views here.
@@ -85,9 +85,26 @@ def RetrieveUpdateEstoque(request, pk):
             return Response([{"Sucesso":"Estoque atualizado com sucesso."}])
         return Response(serializer.errors)
     
+class HistoricoFilter(filters.FilterSet):
+    class Meta:
+        model = Historico
+        fields = {
+            'data':['gt','lt'],
+            'produto__nome':['contains'],
+            'produto__codigo_de_barras':['contains'],
+            'produto':['exact'],
+            'tipo':['exact'],
+        }
+        
+
+class ListHistorico(generics.ListAPIView):
+    lookup_field = 'produto'
+    serializer_class = HistoricoSerializer
+    queryset = Historico.objects.all()
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = HistoricoFilter
 
     
-
 
     
     
