@@ -2,6 +2,8 @@ from decimal import Decimal
 from django.utils import timezone
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models.signals import pre_save, post_save, m2m_changed
+
 
 # Create your models here.
 
@@ -69,3 +71,45 @@ class Historico(models.Model):
     
     def __str__(self):
         return f'{self.produto} tipo {self.tipo}'
+     
+   
+class Venda(models.Model):
+    SITUACAO_CHOICES = (
+        ('Fechada','Fechada'),
+        ('Cancelada','Cancelada')
+    )
+    PAGAMENTO_CHOICES = (
+        ('Pix','Pix'),
+        ('Dinheiro','Dinheiro'),
+        ('Cartão','Cartão'), 
+    )
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    data = models.DateTimeField(default=timezone.now)
+    itens = models.ManyToManyField(Produto, related_name='venda')
+    situacao = models.CharField(choices=SITUACAO_CHOICES, default='Fechada', max_length=9)
+    
+    def __str__(self):  
+        return f'Venda {self.id}'
+
+    
+class ItensVenda(models.Model):
+    # Previne que o item seja deletado se estiver em uma venda.
+    
+    item = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name='itens_venda')
+    venda = models.ForeignKey(Venda, on_delete=models.CASCADE, related_name='venda_itens')
+    
+    def __str__(self):
+        return f'Item da venda {self.venda}'
+
+# Signal para popular o total de uma venda e adicionar os itens selecionados
+# no Model ItensVenda
+def VendaReceiver(instance, sender, action,**kwargs):
+    total = 0
+    if action in ['post_add']:
+        for item in instance.itens.all():
+            total += item.preco_de_venda
+            ItensVenda.objects.create(item=item, venda=instance)
+    instance.total = total
+    instance.save()
+       
+m2m_changed.connect(VendaReceiver, sender=Venda.itens.through)
