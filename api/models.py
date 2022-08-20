@@ -97,7 +97,11 @@ class ItensVenda(models.Model):
     
     item = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name='itens_venda')
     venda = models.ForeignKey(Venda, on_delete=models.CASCADE, related_name='venda_itens')
+    quantidade = models.IntegerField(default=0)
     
+    def save(self, *args, **kwargs):
+        # TODO QUANTIDADE DOS ITENS ?????????
+        super().save(*args, **kwargs)
     def __str__(self):
         return f'Item da venda {self.venda}'
 
@@ -109,7 +113,7 @@ def VendaReceiver(instance, sender, action,**kwargs):
         for item in instance.itens.all():
             total += item.preco_de_venda
             ItensVenda.objects.create(item=item, venda=instance)
-    instance.total = total
+    instance.total = total # TODO QUANTIDADE DOS ITENS ?????????
     instance.save()
        
 m2m_changed.connect(VendaReceiver, sender=Venda.itens.through)
