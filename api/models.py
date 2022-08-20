@@ -98,10 +98,8 @@ class ItensVenda(models.Model):
     item = models.ForeignKey(Produto, on_delete=models.PROTECT, related_name='itens_venda')
     venda = models.ForeignKey(Venda, on_delete=models.CASCADE, related_name='venda_itens')
     quantidade = models.IntegerField(default=0)
-    
-    def save(self, *args, **kwargs):
-        # TODO QUANTIDADE DOS ITENS ?????????
-        super().save(*args, **kwargs)
+    # TODO popular quantidade nas views
+
     def __str__(self):
         return f'Item da venda {self.venda}'
 
